@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -29,6 +31,7 @@ public class Project {
 	private String title;
 
 	@ManyToMany(mappedBy = "projects")
+	@JsonIgnore
 	private List<Person> persons = new ArrayList<>();
 
 }

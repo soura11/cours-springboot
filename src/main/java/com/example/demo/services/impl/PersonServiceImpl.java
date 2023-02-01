@@ -5,13 +5,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entities.Person;
 import com.example.demo.repository.PersonRepository;
 import com.example.demo.services.IPersonService;
-import com.example.demo.services.IService;
 
 @Service("personService")
 public class PersonServiceImpl implements IPersonService {
@@ -22,7 +20,6 @@ public class PersonServiceImpl implements IPersonService {
 	public PersonServiceImpl() {
 		// TODO Auto-generated constructor stub
 	}
-
 
 	/*
 	 * public List<Person> findAll() {

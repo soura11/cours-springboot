@@ -16,7 +16,9 @@ import javax.persistence.ManyToMany;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @Entity
 @Data // Getter, Setter, ToString(), RequiredArgsContructor
 @NoArgsConstructor // Constructeur vide
@@ -24,6 +26,7 @@ public class Person {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@NonNull
 	private Long id;
 	@Column(name = "first_name")
 	@NonNull // Necessaire pr ajouter des valeurs ds RequiredArgsContructor

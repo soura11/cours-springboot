@@ -2,6 +2,9 @@ package com.example.demo.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.example.demo.dto.PersonDto;
 import com.example.demo.entities.Person;
 import com.example.demo.services.IPersonService;
 
@@ -31,8 +35,12 @@ public class PersonRestController {
 	@Autowired // utilisee pr l'injection de dependances
 	private IPersonService personService;
 
+	@Autowired
+	private ModelMapper modelMapper;
+
 	// http://localhost:8080/api/persons
 	@GetMapping()
+
 	public ResponseEntity<List<Person>> getAll() {
 		return new ResponseEntity<List<Person>>(personService.findAll(), HttpStatus.OK);
 	}
@@ -54,8 +62,14 @@ public class PersonRestController {
 	}
 
 	@PostMapping()
-	public ResponseEntity<Person> create(@RequestBody Person person) {
-		return new ResponseEntity<Person>(personService.saveOrUpdate(person), HttpStatus.CREATED);
+	public ResponseEntity<Person> create(@RequestBody @Valid PersonDto personDto) {
+//		Person person = new Person();
+//		person.setFirstName(personDto.getFirstName());
+//		person.setLastName(personDto.getLastName());
+//		person.setAge(personDto.getAge());
+
+		Person personToSave = modelMapper.map(personDto, Person.class);
+		return new ResponseEntity<Person>(personService.saveOrUpdate(personToSave), HttpStatus.CREATED);
 	}
 
 	@GetMapping("/{id}")
@@ -66,13 +80,15 @@ public class PersonRestController {
 				"La personne avec l'id " + id + "n'existe pas"));
 	}
 
+	// /api/persons/1
 	@PutMapping("/{id}")
-	public ResponseEntity<Person> editById(@PathVariable long id, @RequestBody Person person) {
+	public ResponseEntity<Person> editById(@PathVariable long id, @RequestBody @Valid PersonDto personDto) {
 		return personService.findById(id).map((p) -> {
-			p.setFirstName(person.getFirstName());
-			p.setLastName(person.getLastName());
-			p.setAge(person.getAge());
-			personService.saveOrUpdate(person);
+//			p.setFirstName(person.getFirstName());
+//			p.setLastName(person.getLastName());
+//			p.setAge(person.getAge());
+			modelMapper.map(personDto, p);
+			personService.saveOrUpdate(p);
 			return new ResponseEntity<Person>(p, HttpStatus.OK);
 		}).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 				"La personne avec l'id " + id + "n'existe pas"));
